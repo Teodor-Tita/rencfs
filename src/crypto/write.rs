@@ -32,7 +32,7 @@ impl<T: Write + Seek + Read> WriteSeekRead for T {}
 
 /// If you have your custom implementation for [Write] you want to pass to [`CryptoWrite`] it needs to implement this trait.
 ///
-/// It has a blanket implementation for [Write] + [Seek] + [Read] + [`'static`] but in case your implementation is only [Write] it needs to implement this.
+/// It has a blanket implementation for [Write] + [Seek] + [Read] + `'static` but in case your implementation is only [Write] it needs to implement this.
 pub trait CryptoInnerWriter: Write + Any {
     fn into_any(self) -> Box<dyn Any>;
     fn as_write(&mut self) -> Option<&mut dyn Write>;
@@ -382,7 +382,7 @@ impl<W: CryptoInnerWriter + Send + Sync> Seek for RingCryptoWrite<W> {
                 self.block_index = 0;
                 self.decrypt_block()?;
             }
-            let at_full_block_end = self.pos() % self.plaintext_block_size as u64 == 0
+            let at_full_block_end = self.pos().is_multiple_of(self.plaintext_block_size as u64)
                 && self.buf.pos_write() == self.buf.available();
             if self.buf.available() == 0
                 // this checks if we are at the end of the current block,
