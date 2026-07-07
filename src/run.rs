@@ -206,7 +206,7 @@ async fn async_main() -> Result<()> {
     let cipher = cipher.unwrap();
 
     match matches.subcommand() {
-        Some(("change-password", matches)) => run_change_password(cipher, matches).await?,
+        Some(("passwd", matches)) => run_change_password(cipher, matches).await?,
         Some(("mount", matches)) => run_mount(cipher, matches).await?,
         None => {
             error!("No subcommand provided");
